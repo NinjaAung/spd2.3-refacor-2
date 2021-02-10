@@ -13,22 +13,20 @@ class Mass:
 
 
 def calculate_kinetic_energy(mass, distance, time):
-    adjusted_distance = distance
-    adjusted_mass = mass
-    if adjusted_distance.unit != 'km':
+    if distance.unit != 'km':
         # [ly] stands for light-year (measure of distance in astronomy)
-        if adjusted_distance.unit == "ly":
+        if distance.unit == "ly":
             # convert from light-year to km unit
-            in_km = adjusted_mass.value * 9.461e12
+            in_km = distance.value * 9.461e12
             adjusted_distance = Distance(in_km, "km")
         else:
             print("unit is Unknown")
             return
     speed = adjusted_distance.value/time  # [km per sec]
-    if adjusted_mass.unit != 'kg':
-        if adjusted_mass.unit == "solar-mass":
+    if mass.unit != 'kg':
+        if mass.unit == "solar-mass":
             # convert from solar mass to kg
-            value = adjusted_mass.value * 1.98892e30  # [kg]
+            value = mass.value * 1.98892e30  # [kg]
             adjusted_mass = Mass(value, 'kg')
         else:
             print("unit is Unknown")
