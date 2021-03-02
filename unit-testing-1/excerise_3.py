@@ -22,8 +22,22 @@ def read_input():
 def calculate_stat(grade_list):
     """Calculate the mean and standard deviation of the grades."""
     total = 0
+    if grade_list is None:
+        raise ValueError("Can't be none")
+    if type(grade_list) is not list:
+        if type(grade_list) is not tuple:
+            raise ValueError("Input must be a list or tuple")
+             
     for grade in grade_list:
+        if type(grade) is not int:
+            if type(grade) is not float:
+                raise ValueError("List can only consist of nums or float")
+        if grade < 0:
+            raise ValueError("List can't have negative values")
         total = total + grade
+    if len(grade_list) == 0:
+        raise ZeroDivisionError("List can't be empty")
+
     mean = total / len(grade_list)
     sum_of_sqrs = 0
     for grade in grade_list:
@@ -38,4 +52,4 @@ def print_stat(mean, sd):
     print('The population standard deviation of grades is: ', round(sd, 3))
     print('****** END ******')
 
-display_grade_stat()
+# display_grade_stat()
