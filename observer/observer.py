@@ -84,10 +84,65 @@ class CurrentConditionsDisplay(Observer):
 class StatisticsDisplay(Observer):
     # The StatisticsDisplay class should keep track of the min/average/max
     # measurements and display them.
-    pass
+    
+    # All recording weather data
+    temps      = [] 
+    humidities = [] 
+    pressures  = [] 
+
+    # stats are recorded as (Min,Average,Max)
+    temps_stats      = (None,None,None)
+    humidities_stats = (None,None,None)
+    pressures_stats  = (None,None,None)
+
+    def __init__(self, weather_data):
+        # register observer
+        self.weather_data = weather_data    
+        weather_data.register_observer(self)
+
+    
+    
+    @staticmethod
+    def update_helper(measurements,stat):
+        m_min = measurements[0]
+        m_max = measurements[0]
+        for measurment in measurements:
+            if measurment < m_min:
+                m_min = measurment
+            if measurment > m_max:
+                m_max = measurment
+        stat = (m_min,sum(measurements)/len(measurements),m_max)
+    
+    def update(self,temp,humidity,pressure):
+        self.temps.append(temp)
+        self.update_helper(self.temps,self.temps_stats)
+        
+        self.humidities.append(humidity)
+        self.update_helper(self.humidities,self.humidities_stats)
+        
+        self.pressures.append(pressure)
+        self.update_helper(self.pressures,self.pressures_stats)
+        
+        print("Updated!")
+
+    def display(self):
+        print(f'''Pressure
+            min:     {self.pressures_stats[0]}
+            max:     {self.pressures_stats[2]}
+            average: {self.pressures_stats[1]}
+        temps:
+            min:     {self.temps_stats[0]}
+            max:     {self.temps_stats[2]}
+            average: {self.temps_stats[1]}
+        humidity:
+            min:     {self.humidities_stats[0]}
+            max:     {self.humidities_stats[2]}
+            average: {self.humidities_stats[1]}\n''')
+        
 
 
 class ForecastDisplay(Observer):
+
     # The ForecastDisplay class shows the weather forcast based on the current
     # temperature, humidity and pressure. Use the following formuals :
     # forcast_temp = temperature + 0.11 * humidity + 0.2 * pressure
