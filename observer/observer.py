@@ -148,18 +148,33 @@ class ForecastDisplay(Observer):
     # forcast_temp = temperature + 0.11 * humidity + 0.2 * pressure
     # forcast_humadity = humidity - 0.9 * humidity
     # forcast_pressure = pressure + 0.1 * temperature - 0.21 * pressure
-    pass
+    forecast_temp     = 0
+    forecast_humidity = 0  
+    forecast_pressure = 0
+    
+    
+    def __init__(self, weather_data): 
+        self.weather_data = weather_data 
+        weather_data.register_observer(self)
+
+    def update(self, temperature, humidity, pressure):
+        self.forecast_temp = temperature + 0.11 * humidity + 0.2 * pressure
+        self.forecast_humidity = humidity - 0.9 * humidity
+        self.forecast_pressure = pressure + 0.1 * temperature - 0.21 * pressure
+        self.display()
+
+    def display(self):
+        print(f'''Forecast Display
+        temp:     {self.forecast_temp}
+        humidity: {self.forecast_humidity}
+        pressure: {self.forecast_pressure}
+        ''')
     
     
 class WeatherStation:
     def main(self):
         weather_data = WeatherData()
         current_display = CurrentConditionsDisplay(weather_data)
-        
-        # TODO: Create two objects from StatisticsDisplay class and 
-        # ForecastDisplay class. Also register them to the concerete instance
-        # of the Subject class so the they get the measurements' updates.
-        
         
         
         weather_data.setMeasurements(80, 65,30.4)
